@@ -5,7 +5,8 @@ using UnityEngine;
 public class Player1Health : MonoBehaviour
 {
     public int maxHealth1 = 100;
-    private int currentHealth1;
+    public int currentHealth1;
+    
 
     void Start()
     {
@@ -24,6 +25,6 @@ public class Player1Health : MonoBehaviour
     void Die1()
     {
         Debug.Log("Player 1 died!");
-        gameObject.SetActive(false);
+        GameObject.FindGameObjectWithTag("Player1").SetActive(false);
     }
 }

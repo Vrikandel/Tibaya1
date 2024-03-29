@@ -5,7 +5,7 @@ using UnityEngine;
 public class Player2Health : MonoBehaviour
 {
     public int maxHealth = 100;
-    private int currentHealth2;
+    public int currentHealth2;
 
     void Start()
     {
@@ -24,6 +24,6 @@ public class Player2Health : MonoBehaviour
     void Die2()
     {
         Debug.Log("Player 2 died!");
-        gameObject.SetActive(false);
+        GameObject.FindGameObjectWithTag("Player2").SetActive(false);
     }
 }

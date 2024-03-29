@@ -22,7 +22,7 @@ public class MeleeAttackPlayer2 : MonoBehaviour
 
         foreach (Collider2D collider in colliders)
         {
-            Player2Health player1Health = collider.gameObject.GetComponent<Player2Health>();
+            Player1Health player1Health = collider.gameObject.GetComponent<Player1Health>();
             if (player1Health != null)
             {
                 player1Health.TakeDamage(damageAmount);
