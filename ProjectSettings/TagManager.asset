@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Player1
   - Player2
+  - Trap
   layers:
   - Default
   - TransparentFX
@@ -14,8 +15,8 @@ TagManager:
   - Water
   - UI
   - Ground
-  - 
-  - 
+  - Player2
+  - Player1
   - 
   - 
   - 

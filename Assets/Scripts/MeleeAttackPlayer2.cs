@@ -4,10 +4,19 @@ using UnityEngine;
 
 public class MeleeAttackPlayer2 : MonoBehaviour
 {
-    public int damageAmount = 10;
-    public string opponentTag;
+    public Animator anim;
+    public Transform attackPoint;
+    public LayerMask player1Layer;
 
+    [SerializeField] private AudioSource punchingSoundEffect;
+
+    public int damageAmount = 10;
+    public float attackRange = 0.5f;
+    
+    
+    
     private void Update()
+
     {
         if (Input.GetButtonDown("Fire2"))
         {
@@ -18,16 +27,23 @@ public class MeleeAttackPlayer2 : MonoBehaviour
 
     private void DamageOpponent()
     {
-        Collider2D[] colliders = Physics2D.OverlapBoxAll(transform.position, transform.localScale, 0);
-
-        foreach (Collider2D collider in colliders)
         {
-            Player1Health player1Health = collider.gameObject.GetComponent<Player1Health>();
-            if (player1Health != null)
-            {
-                player1Health.TakeDamage(damageAmount);
-            }
+            punchingSoundEffect.Play();   
+            anim.SetTrigger("punching");
+            Collider2D[] hitPlayer1 = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, player1Layer);
+            foreach(Collider2D player1 in hitPlayer1)
+        {
+            player1.GetComponent<Player1Health>().TakeDamage(damageAmount);
         }
+        } 
     }
+    void OnDrawGizmosSelected()
+    { 
+        if(attackPoint == null)
+            return;
 
+        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+    }
 }
+
+
