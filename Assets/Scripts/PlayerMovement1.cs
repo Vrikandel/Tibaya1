@@ -16,12 +16,17 @@ public class PlayerMovement : MonoBehaviour
    [SerializeField] private float moveSpeed = 7f;
    [SerializeField] private float jumpForce = 14f;
 
-   private bool wasAirborne = false;
+    public float KBForce;
+    public float KBCounter;
+    public float KBTotalTime;
+    public bool KnockfromRight;
 
-   public enum AnimationState { idle, running, jumping, falling, punching }
-   [SerializeField] private AudioSource jumpSoundEffect;
-   [SerializeField] private AudioSource landingSoundEffect;
-   [SerializeField] private AudioSource walkingSoundEffect;
+    private bool wasAirborne = false;
+   
+    public enum AnimationState { idle, running, jumping, falling, punching }
+    [SerializeField] private AudioSource jumpSoundEffect;
+    [SerializeField] private AudioSource landingSoundEffect;
+    [SerializeField] private AudioSource walkingSoundEffect;
 
     private void Start()
     {
@@ -33,8 +38,23 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        dirX = Input.GetAxisRaw("Horizontal");
-        rb.velocity = new Vector2(dirX * moveSpeed, rb.velocity.y);
+        if (KBCounter <= 0)
+        {
+            dirX = Input.GetAxisRaw("Horizontal");
+            rb.velocity = new Vector2(dirX * moveSpeed, rb.velocity.y);
+        }
+        else
+        {
+            if (KnockfromRight == true)
+            {
+                rb.velocity = new Vector2(-KBForce, KBForce);
+            }
+            if(KnockfromRight == false)
+            {
+               rb.velocity = new Vector2(KBForce, KBForce); 
+            }
+            KBCounter -= Time.deltaTime;
+        }
 
         if (Input.GetButtonDown("Jump") && IsGrounded())
         {

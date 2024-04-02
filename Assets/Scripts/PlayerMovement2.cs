@@ -17,6 +17,11 @@ public class PlayerMovement2 : MonoBehaviour
     [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private float jumpForce = 14f;
 
+    public float KBForce;
+    public float KBCounter;
+    public float KBTotalTime;
+    public bool KnockfromRight;
+
     private bool wasAirborne = false;
 
     private enum AnimationState { idle, running, jumping, falling, punching }
@@ -35,8 +40,23 @@ public class PlayerMovement2 : MonoBehaviour
 
     private void Update()  
     {
-        dirX2 = Input.GetAxisRaw("Horizontal2");
-        rb.velocity = new Vector2(dirX2 * moveSpeed, rb.velocity.y);
+        if (KBCounter <= 0)
+        {
+            dirX2 = Input.GetAxisRaw("Horizontal2");
+            rb.velocity = new Vector2(dirX2 * moveSpeed, rb.velocity.y);
+        }
+        else
+        {
+            if (KnockfromRight == true)
+            {
+                rb.velocity = new Vector2(-KBForce, KBForce);
+            }
+            if(KnockfromRight == false)
+            {
+               rb.velocity = new Vector2(KBForce, KBForce); 
+            }
+            KBCounter -= Time.deltaTime;
+        }
 
         if (Input.GetButtonDown("Jump2") && IsGrounded())
             { 
