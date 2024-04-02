@@ -13,7 +13,7 @@ public class PlayerMovement2 : MonoBehaviour
 
     [SerializeField] private LayerMask jumpableGround;
 
-    private float dirX = 0f;
+    public float dirX2 = 0f;
     [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private float jumpForce = 14f;
 
@@ -35,8 +35,8 @@ public class PlayerMovement2 : MonoBehaviour
 
     private void Update()  
     {
-        dirX = Input.GetAxisRaw("Horizontal2");
-        rb.velocity = new Vector2(dirX * moveSpeed, rb.velocity.y);
+        dirX2 = Input.GetAxisRaw("Horizontal2");
+        rb.velocity = new Vector2(dirX2 * moveSpeed, rb.velocity.y);
 
         if (Input.GetButtonDown("Jump2") && IsGrounded())
             { 
@@ -63,7 +63,7 @@ public class PlayerMovement2 : MonoBehaviour
         }
     private void WalkingCheck()
         { 
-            if (dirX != 0f && IsGrounded())
+            if (dirX2 != 0f && IsGrounded())
             {
                 if (!walkingSoundEffect.isPlaying)
                 {
@@ -82,12 +82,12 @@ public class PlayerMovement2 : MonoBehaviour
     private void UpdateAninimationState()
     {
         AnimationState state;
-        if (dirX > 0f)
+        if (dirX2 > 0f)
         {
             state = AnimationState.running;
             sprite.flipX = false;
         }
-        else if (dirX < 0f)
+        else if (dirX2 < 0f)
         {
             state = AnimationState.running;
             sprite.flipX = true;
