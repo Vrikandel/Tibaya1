@@ -27,6 +27,7 @@ public class MeleeAttack : MonoBehaviour
 
     private void Start()
     {
+
         sprite = GetComponent<SpriteRenderer>(); 
         playerMovement = GetComponent<PlayerMovement>();
         currentattackpoint = attackPoint1;

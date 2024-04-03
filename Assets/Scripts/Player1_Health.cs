@@ -8,20 +8,26 @@ public class Player1Health : MonoBehaviour
 {
     private Animator anim;
     private Rigidbody2D rb;
+    private Score scorePlayer2;
 
     [SerializeField] private AudioSource deathSoundEffect;
     [SerializeField] private Text HpText;
+    [SerializeField] private Text Score2Text;
 
     public int maxHealth1 = 100;
     public int currentHealth1;
     private int hp;
+    private int score2;
 
     void Start()
     {
+        scorePlayer2 = GetComponent<Score>();
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         currentHealth1 = maxHealth1;
         hp = maxHealth1;
+        
+        
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -45,14 +51,26 @@ public class Player1Health : MonoBehaviour
     
     private void Die1()
     {
+        score2 = score2 + 1;
+        Score2Text.text = "Score:" + score2;
+        PlayerPrefs.SetInt("Score2", score2);
+        PlayerPrefs.Save();
+        Debug.Log("Score before reload: " + score2);
+
         deathSoundEffect.Play();
-        Debug.Log("Player 1 died!");
+        Debug.Log("Player 1 died! Score:" + score2);
         anim.SetTrigger("death");
         rb.bodyType = RigidbodyType2D.Static;
+
+        
+        Invoke("RestartLevel", 1.0f);
     }
     private void RestartLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-       
+        score2 = PlayerPrefs.GetInt("Score2", 0);
+        Debug.Log("Loaded Score: " + score2);
+        Score2Text.text = "Score:" + score2;
+
     }
 }
