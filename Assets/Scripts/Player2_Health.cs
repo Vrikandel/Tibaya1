@@ -47,6 +47,7 @@ public class Player2Health : MonoBehaviour
 
     void Die2()
     {
+        ScorePlayer1.instance.AddScore();
         deathSoundEffect.Play();
         anim.SetTrigger("death");
         Debug.Log("Player 2 died!");

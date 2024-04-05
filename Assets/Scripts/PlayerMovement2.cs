@@ -6,14 +6,16 @@ using UnityEngine.U2D;
 
 public class PlayerMovement2 : MonoBehaviour
 {
+
+    
     private Rigidbody2D rb;
     private SpriteRenderer sprite;
     private BoxCollider2D coll;
     private Animator anim;
-
+    [SerializeField] private TrailRenderer tr;
     [SerializeField] private LayerMask jumpableGround;
 
-    public float dirX2 = 0f;
+    private float dirX2 = 0f;
     [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private float jumpForce = 14f;
 
@@ -22,7 +24,14 @@ public class PlayerMovement2 : MonoBehaviour
     public float KBTotalTime;
     public bool KnockfromRight;
 
+    private bool canDash = true;
+    private bool isDashing;
+    [SerializeField] private float dashingPower = 24f;
+    [SerializeField] private float dashingTime = 0.2f;
+    [SerializeField] private float dashingCooldown = 2f;
+
     private bool wasAirborne = false;
+    private float Facing = 0;
 
     private enum AnimationState { idle, running, jumping, falling, punching }
 
@@ -40,6 +49,19 @@ public class PlayerMovement2 : MonoBehaviour
 
     private void Update()  
     {
+        if (sprite.flipX == true)
+        {
+            Facing = -1;
+        }
+        else 
+        {
+            Facing = 1;
+        }
+        if (isDashing)
+        {
+            return;
+        }
+
         if (KBCounter <= 0)
         {
             dirX2 = Input.GetAxisRaw("Horizontal2");
@@ -64,9 +86,30 @@ public class PlayerMovement2 : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
             }
 
+        if (Input.GetButtonDown("AbilityDash") && canDash)
+            {
+             StartCoroutine(Dash());   
+            }
+
         LandingCheck();
         WalkingCheck();
         UpdateAninimationState();
+    }
+
+    private IEnumerator Dash()
+    {
+        canDash = false;
+        isDashing = true;
+        float orginalGravity = rb.gravityScale;
+        rb.gravityScale = 0f;
+        rb.velocity = new Vector2(Facing * dashingPower, 0f);
+        tr.emitting = true;
+        yield return new WaitForSeconds(dashingTime);
+        tr.emitting = false;
+        rb.gravityScale = orginalGravity;
+        isDashing = false;
+        yield return new WaitForSeconds(dashingCooldown);
+        canDash = true;
     }
 
     private void LandingCheck()

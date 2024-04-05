@@ -19,7 +19,7 @@ public class MeleeAttackPlayer2 : MonoBehaviour
 
     public int damageAmount = 10;
     public float attackRange = 0.5f;
-    public float attackRate = 2f;
+    public float attackRate = 3f;
     private float nextAttackTime = 0f;
 
     private Transform currentattackpoint;
@@ -47,6 +47,7 @@ public class MeleeAttackPlayer2 : MonoBehaviour
                 SwitchAttackPoint2();
             }
         }
+        
     }
 
 

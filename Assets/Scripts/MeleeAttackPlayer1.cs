@@ -7,33 +7,43 @@ using UnityEngine.AI;
 
 public class MeleeAttack : MonoBehaviour
 {
+    private PlayerMovement playerMovement;
+    public PlayerMovement2 playerMovement2;
+    public Abilites abilites;
+
     public Animator anim;
     private SpriteRenderer sprite;
     public Transform attackPoint1;
     public Transform attackPoint2;
     public LayerMask player2Layer;
     public GameObject popUpPrefab;
+    private Transform currentattackpoint;
 
     [SerializeField] private AudioSource punchingSoundEffect;
+    [SerializeField] private AudioSource powerUpSoundEffect;
+    [SerializeField] private AudioSource powerUpOverSoundEffect;
 
-    private PlayerMovement playerMovement;
-    public PlayerMovement2 playerMovement2;
+    private bool canPowerUp = true;
+    private float powerupDamage;
+    public float powerupDuration = 3f;
+    public float powerupCooldown = 5f;
+    public float powerupDamageMultiplier = 2f;
 
     public float attackRange = 0.5f;
     public int damageAmount = 10;
-    public float attackRate = 2f;
+    public float attackRate = 3f;
     private float nextAttackTime = 0f;
-    private Transform currentattackpoint;
+    
 
     private void Start()
     {
-
         sprite = GetComponent<SpriteRenderer>(); 
         playerMovement = GetComponent<PlayerMovement>();
         currentattackpoint = attackPoint1;
     }
     private void Update()
     {
+
         if(Time.time >= nextAttackTime)
         {
             if (Input.GetButtonDown("Fire1"))
@@ -45,6 +55,11 @@ public class MeleeAttack : MonoBehaviour
             {
                 SwitchAttackPoint1();
             }
+        }
+        if (Input.GetButtonDown("PowerUp") && canPowerUp)
+        {
+            
+            StartCoroutine(PowerUp());
         }
     }
 
@@ -74,7 +89,29 @@ public class MeleeAttack : MonoBehaviour
             }
             player2.GetComponent<Player2Health>().TakeDamage(damageAmount);
         }
+
     
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawWireSphere(attackPoint2.position, attackRange);
+    }
+
+    private IEnumerator PowerUp()
+    {
+        powerUpSoundEffect.Play();
+        canPowerUp = false;
+        int originaldamageAmount = damageAmount;
+        powerupDamage = powerupDamageMultiplier * damageAmount;
+        damageAmount = (int)powerupDamage;
+        Debug.Log(damageAmount);
+        yield return new WaitForSeconds(powerupDuration);
+        powerUpOverSoundEffect.Play();
+        damageAmount = originaldamageAmount;
+        Debug.Log(damageAmount);
+        yield return new WaitForSeconds(powerupCooldown);
+        canPowerUp = true;
     }
 
     private void SwitchAttackPoint1()
